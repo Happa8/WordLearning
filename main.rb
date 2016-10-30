@@ -1,4 +1,4 @@
-# scraping.rb 
+# main.rb 
 require 'bundler'
 Bundler.require
 
