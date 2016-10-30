@@ -42,6 +42,23 @@ def show
   end
 end
 
+def test
+  id = rand($db.execute2("SELECT COUNT(*) from words")[1][0].to_i)+1
+  meaning = $db.execute2("SELECT jp_word FROM words WHERE ROWID = #{id}")
+  en_word = $db.execute2("SELECT en_word FROM words WHERE ROWID = #{id}")[1][0]
+  puts "meaning :"
+  meaning[1][0].split("、").each do |item|
+    puts item
+  end
+  print "answer>"
+  input_word = STDIN.gets.chomp
+  if input_word == en_word
+    puts "It is correct answer!"
+  else
+    puts "It is incorrect answer...\nCorrect answer is \"#{en_word}\""
+  end
+end
+
 def main
   puts "\e[H\e[2J"
   print "WordLearning\n"
@@ -53,6 +70,8 @@ def main
    print "Please input the word\n>"
    word = STDIN.gets.chomp
    record(word)
+  when "2"
+   test
   when "3"
     show
   else
