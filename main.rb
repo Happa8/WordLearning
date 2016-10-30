@@ -3,9 +3,9 @@ require 'bundler'
 Bundler.require
 include SQLite3
 
+$db = Database.new("./word.db")
+
 def record(keyword)
-  $db = Database.new("./word.db")
-                                                                      
   if !$db.execute("SELECT tbl_name FROM sqlite_master WHERE TYPE == 'table'").flatten.include?("words")
   sql_create_table = <<SQL
   CREATE TABLE words (
@@ -29,20 +29,32 @@ SQL
       puts "#{meaning}\n"
     end
   end
-  $db.close
+end
+
+def show
+  db_data = $db.execute2("SELECT * FROM words")
+  db_data.each do |item|
+    puts "[#{item[0]}]"
+    item[1].split("、").each do |meaning|
+      puts "\t#{meaning}"
+    end
+    print "\n\n"
+  end
 end
 
 def main
   puts "\e[H\e[2J"
   print "WordLearning\n"
   print "\t\tcreated by Happa8\n"
-  print "serect mode\n\t1: record mode\n\t2: test mode\n>"
+  print "serect mode\n\t1: record mode\n\t2: test mode\n\t3: show mode\n>"
   mode = STDIN.gets.chomp
   case mode
   when "1"
    print "Please input the word\n>"
    word = STDIN.gets.chomp
    record(word)
+  when "3"
+    show
   else
     print "Please select correct number!"
     main
@@ -50,3 +62,5 @@ def main
 end
 
 main
+
+$db.close
