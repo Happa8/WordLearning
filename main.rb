@@ -26,7 +26,10 @@ search_page.search('.content-explanation').each do |item|
   if !$db.execute("SELECT en_word FROM words").flatten.include?("#{keyword}")
   $db.execute("INSERT INTO words VALUES('#{keyword}', '#{jp_word}')")
   end
-  p jp_word.split("、")
+  jp_word_array = jp_word.split("、")
+  jp_word_array.each do |meaning|
+    puts "#{meaning}\n"
+  end
 end
 
 p $db.execute2("SELECT * FROM words")
